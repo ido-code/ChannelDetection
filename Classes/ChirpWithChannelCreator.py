@@ -1,6 +1,7 @@
 import numpy as np
 from Channel import Channel
 
+
 class ChirpParams:
     def __init__(self, f_low, f_high, fs, time_to_transmit_chirp, time_between_chirps_begins, num_chirps):
         self.f_low = f_low
@@ -12,18 +13,18 @@ class ChirpParams:
 
 
 class ChirpSigCreator:
-    def __init__(self, chirpparmas: ChirpParams, channel: Channel):
-        self.chirpParams = chirpparmas
+    def __init__(self, chirp_params: ChirpParams, channel: Channel):
+        self.chirp_params = chirp_params
         self.channel = channel
-        assert self.chirpparmas.fs == Channel.fs, f"fs ({self.chirpParams.fs}) is not equal to channel.fs ({Channel.fs})"
+        assert self.chirpparmas.fs == Channel.fs, f"fs ({self.chirp_params.fs}) is not equal to channel.fs ({Channel.fs})"
 
     def create_one_chirp(self):
         # Compute the time vector
-        t = np.arange(0, self.chirpParams.time_to_transmit_chirp, 1 / self.chirpParams.fs)
+        t = np.arange(0, self.chirp_params.time_to_transmit_chirp, 1 / self.chirp_params.fs)
 
         # Compute the instantaneous frequency of the chirp
-        k = (self.chirpParams.f_high - self.chirpParams.f_low) / self.chirpParams.time_to_transmit_chirp
-        inst_freq = self.chirpParams.f_low + k * t
+        k = (self.chirp_params.f_high - self.chirp_params.f_low) / self.chirp_params.time_to_transmit_chirp
+        inst_freq = self.chirp_params.f_low + k * t
 
         # Generate the chirp signal
         chirp_sig = np.exp(1j * 2 * np.pi * inst_freq * t)
@@ -33,13 +34,13 @@ class ChirpSigCreator:
     def create_chirps_with_time_gaps(self) -> np.ndarray:
         # Create an empty array to hold the output signals
         num_samples = int(
-            self.chirpParams.fs * self.chirpParams.time_between_chirps_begins * self.chirpParams.num_chirps)
+            self.chirp_params.fs * self.chirp_params.time_between_chirps_begins * self.chirp_params.num_chirps)
         sig = np.zeros(num_samples)
 
         # Generate each chirp and insert it into the output array with the appropriate time gap
         chirp_sig = self.create_one_chirp()
-        for i in range(self.chirpParams.num_chirps):
-            start_index = int(i * self.chirpParams.fs * self.chirpParams.time_between_chirps_begins)
+        for i in range(self.chirp_params.num_chirps):
+            start_index = int(i * self.chirp_params.fs * self.chirp_params.time_between_chirps_begins)
             end_index = start_index + len(chirp_sig)
             sig[start_index:end_index] = chirp_sig
 
