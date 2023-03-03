@@ -6,7 +6,7 @@ def test_Only_Coeffs():
     fs = 1
     channel = Classes.Channel.Channel(freq_dev, channel_coeeffs,fs)
     sig = np.array([1,2,3,0])
-    sigAfterChannel = channel.ApplyChanelOnSig(sig)
+    sigAfterChannel = channel.apply_chanel_on_sig(sig)
     expectedRes = np.array([0,1,2,3])
     assert np.allclose(sigAfterChannel,expectedRes,1e-5)
 def test_Only_freq_dev():
@@ -15,7 +15,7 @@ def test_Only_freq_dev():
     fs = 1
     channel = Classes.Channel.Channel(freq_dev, channel_coeeffs,fs)
     sig = np.array([1,2,3,0])
-    sigAfterChannel = channel.ApplyChanelOnSig(sig)
+    sigAfterChannel = channel.apply_chanel_on_sig(sig)
     expectedRes = np.array([1,2j,-3,0])
     assert np.allclose(sigAfterChannel,expectedRes,1e-5)
 def test_All_Channel():
@@ -24,7 +24,7 @@ def test_All_Channel():
     fs = 1
     channel = Classes.Channel.Channel(freq_dev, channel_coeeffs,fs)
     sig = np.array([1,2,3,0])
-    sigAfterChannel = channel.ApplyChanelOnSig(sig)
+    sigAfterChannel = channel.apply_chanel_on_sig(sig)
     expectedRes = np.array([0,-1,2,-3])
     assert np.allclose(sigAfterChannel,expectedRes,1e-5)
 
@@ -44,8 +44,8 @@ def test_update_channel():
     channel = Classes.Channel.Channel(freq_dev, channel_coeeffs, fs, 1)
     sig = np.zeros([lengthToTake])
     sig[indToPlaceOne] = 1
-    recived = channel.ApplyChanelOnSig(sig)
-    channel.Update_Channel_estimation(sig, recived)
+    recived = channel.apply_chanel_on_sig(sig)
+    channel.update_channel_estimation(sig, recived)
     diff_between_res = channel.channel_coeffs - channel_coeeffs
     max_diff = np.max(np.abs(diff_between_res))
     assert max_diff < 1e-4
