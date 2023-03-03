@@ -1,38 +1,17 @@
 import numpy as np
-
+import pytest
 import Classes.Channel
 
 
-def test_only_coeffs():
-    channel_coeffs = np.array([0, 1])
-    freq_dev = np.array([0])
+@pytest.mark.parametrize("channel_coeffs,freq_dev,expected_res",
+                         [(np.array([0, 1]), np.array([0]), np.array([0, 1, 2, 3])),
+                          [np.array([1]), np.array([0.25]), np.array([1, 2j, -3, 0])],
+                          (np.array([0, 1]), np.array([0.5]), np.array([0, -1, 2, -3]))])
+def test_only_coeffs(channel_coeffs, freq_dev, expected_res):
     fs = 1
     channel = Classes.Channel.Channel(freq_dev, channel_coeffs, fs)
     sig = np.array([1, 2, 3, 0])
     sig_after_channel = channel.apply_chanel_on_sig(sig)
-    expected_res = np.array([0, 1, 2, 3])
-    assert np.allclose(sig_after_channel, expected_res, 1e-5)
-
-
-def test_only_freq_dev():
-    channel_coeffs = np.array([1])
-    freq_dev = np.array([0.25])
-    fs = 1
-    channel = Classes.Channel.Channel(freq_dev, channel_coeffs, fs)
-    sig = np.array([1, 2, 3, 0])
-    sig_after_channel = channel.apply_chanel_on_sig(sig)
-    expected_res = np.array([1, 2j, -3, 0])
-    assert np.allclose(sig_after_channel, expected_res, 1e-5)
-
-
-def test_all_channel():
-    channel_coeeffs = np.array([0, 1])
-    freq_dev = np.array([0.5])
-    fs = 1
-    channel = Classes.Channel.Channel(freq_dev, channel_coeeffs, fs)
-    sig = np.array([1, 2, 3, 0])
-    sig_after_channel = channel.apply_chanel_on_sig(sig)
-    expected_res = np.array([0, -1, 2, -3])
     assert np.allclose(sig_after_channel, expected_res, 1e-5)
 
 

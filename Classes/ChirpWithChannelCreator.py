@@ -1,5 +1,6 @@
 import numpy as np
-from Channel import Channel
+
+from Classes.Channel import Channel
 
 
 class ChirpParams:
@@ -16,9 +17,9 @@ class ChirpSigCreator:
     def __init__(self, chirp_params: ChirpParams, channel: Channel):
         self.chirp_params = chirp_params
         self.channel = channel
-        assert self.chirpparmas.fs == Channel.fs, f"fs ({self.chirp_params.fs}) is not equal to channel.fs ({Channel.fs})"
+        assert self.chirp_params.fs == channel.fs, f"fs ({self.chirp_params.fs}) is not equal to channel.fs ({Channel.fs})"
 
-    def create_one_chirp(self):
+    def create_one_chirp(self) -> np.ndarray:
         # Compute the time vector
         t = np.arange(0, self.chirp_params.time_to_transmit_chirp, 1 / self.chirp_params.fs)
 
