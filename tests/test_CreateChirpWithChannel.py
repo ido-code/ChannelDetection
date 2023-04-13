@@ -4,13 +4,14 @@ from pytest import mark
 from Classes.Channel import Channel
 from Classes.ChirpWithChannelCreator import ChirpSigCreator, ChirpParams
 
-ind_to_start = lambda fs,t,ind_reps: int(fs*t*ind_reps)
+TimeToIndStart = lambda fs, t, ind_reps: int(fs * t * ind_reps)
 
 def setup_expected_result(fs, time_between_chirps_begins, num_chirps, sig_to_rep):
-    num_samples = int(fs*time_between_chirps_begins*num_chirps)
+
+    num_samples = TimeToIndStart(fs,time_between_chirps_begins,num_chirps)
     output_sig = np.zeros([num_samples])
     for ind in range(num_chirps):
-        start_ind = int(ind*fs*time_between_chirps_begins)
+        start_ind = TimeToIndStart(fs,time_between_chirps_begins,ind)
         end_ind = start_ind + len(sig_to_rep)
         output_sig[start_ind:end_ind] = sig_to_rep
     return  output_sig
